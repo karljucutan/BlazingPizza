@@ -1,0 +1,122 @@
+@using BlazingPizza.Data
+
+@inject PizzaService PizzaSvc
+@inject HttpClient HttpClient
+@inject NavigationManager NavigationManager
+
+@page "/backup"
+
+<div class="main">
+    <h1>Blazing Pizzas</h1>
+    <ul class="pizza-cards">
+        @if (specials != null)
+        {
+            @foreach (var special in specials)
+            {
+                <li @onclick="@(() => ShowConfigurePizzaDialog(special))" style="background-image: url('@special.ImageUrl')">
+                    <div class="pizza-info">
+                        <span class="title">@special.Name</span>
+                        @special.Description
+                        <span class="price">@special.GetFormattedBasePrice()</span>
+                    </div>
+                </li>
+            }
+        }
+    </ul>
+</div>
+
+@if (showingConfigureDialog)
+{
+    <ConfigurePizzaDialog Pizza="configuringPizza" />
+}
+
+@code {
+    List<PizzaSpecial> specials = new();
+    private Data.Pizza[] todaysPizzas;
+    BlazingPizza.Pizza configuringPizza;
+    bool showingConfigureDialog;
+
+    protected override async Task OnInitializedAsync()
+    //protected override void OnInitialized()
+
+    {
+        // todaysPizzas = (await PizzaSvc.GetPizzasAsync()).ToArray();
+
+        // //todaysPizzas = PizzaSvc.GetPizzas().Result.ToArray();
+
+        // string a = "b";
+
+        // specials.AddRange(new List<PizzaSpecial>
+        // {
+        //     new PizzaSpecial { Name = "The Baconatorizor", BasePrice =  11.99M, Description = "It has EVERY kind of bacon", ImageUrl="img/pizzas/bacon.jpg"},
+        //     new PizzaSpecial { Name = "Buffalo chicken", BasePrice =  12.75M, Description = "Spicy chicken, hot sauce, and blue cheese, guaranteed to warm you up", ImageUrl="img/pizzas/meaty.jpg"},
+        //     new PizzaSpecial { Name = "Veggie Delight", BasePrice =  11.5M, Description = "It's like salad, but on a pizza", ImageUrl="img/pizzas/salad.jpg"},
+        //     new PizzaSpecial { Name = "Margherita", BasePrice =  9.99M, Description = "Traditional Italian pizza with tomatoes and basil", ImageUrl="img/pizzas/margherita.jpg"},
+        //     new PizzaSpecial { Name = "Basic Cheese Pizza", BasePrice =  11.99M, Description = "It's cheesy and delicious. Why wouldn't you want one?", ImageUrl="img/pizzas/cheese.jpg"},
+        //     new PizzaSpecial { Name = "Classic pepperoni", BasePrice =  10.5M, Description = "It's the pizza you grew up with, but Blazing hot!", ImageUrl="img/pizzas/pepperoni.jpg" }
+        // });
+        specials = await HttpClient.GetFromJsonAsync<List<PizzaSpecial>>(NavigationManager.BaseUri + "specials");
+    }
+
+    void ShowConfigurePizzaDialog(PizzaSpecial special)
+    {
+        configuringPizza = new BlazingPizza.Pizza()
+            {
+                Special = special,
+                SpecialId = special.Id,
+                Size = BlazingPizza.Pizza.DefaultSize
+            };
+
+        showingConfigureDialog = true;
+    }
+}
+		
+@* 
+<h1>Choose your pizza</h1>
+
+<p>We have all these delicious recipes:</p>
+
+@if (todaysPizzas == null)
+{
+    <p>We're finding out what pizzas are available today...</p>
+}
+else
+{
+    <!-- This markup will be rendered once the pizzas are loaded -->
+    <table>
+        <thead>
+            <tr>
+                <th>Pizza Name</th>
+                <th>Description</th>
+                <th>Vegetarian?</th>
+                <th>Vegan?</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var pizza in todaysPizzas)
+            {
+                <tr>
+                    <td>@pizza.Name</td>
+                    <td>@pizza.Description</td>
+                    <td>@pizza.Vegetarian</td>
+                    <td>@pizza.Vegan</td>
+                    <td>@pizza.Price</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+@code
+{
+    private Data.Pizza[] todaysPizzas;
+
+    protected override async Task OnInitializedAsync()
+    {
+        todaysPizzas = (await PizzaSvc.GetPizzasAsync()).ToArray();
+
+        string a = "b";
+    }
+} *@
