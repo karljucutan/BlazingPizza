@@ -14,7 +14,7 @@ namespace BlazingPizza.Pages
             var response = await HttpClient.PostAsJsonAsync($"{NavigationManager.BaseUri}orders", OrderState.Order);
             var newOrderId = await response.Content.ReadFromJsonAsync<int>();
             OrderState.ResetOrder();
-            NavigationManager.NavigateTo("/myorders");
+            NavigationManager.NavigateTo($"myorders/{newOrderId}");
         }
     }
 }
