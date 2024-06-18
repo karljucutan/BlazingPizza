@@ -5,16 +5,16 @@ namespace BlazingPizza.Pages
 {
     public partial class Checkout
     {
-        private Order Order => OrderState.Order;
+        private Order Order => OrderState.Order; // private access modifier by default if not explicitly indicated.
         private bool isSubmitting;
 
-        private async Task PlaceOrder()
+        async Task PlaceOrder() // private access modifier by default if not explicitly indicated.
         {
             isSubmitting = true;
-            var response = await HttpClient.PostAsJsonAsync(NavigationManager.BaseUri + "orders", OrderState.Order);
+            var response = await HttpClient.PostAsJsonAsync($"{NavigationManager.BaseUri}orders", OrderState.Order);
             var newOrderId = await response.Content.ReadFromJsonAsync<int>();
             OrderState.ResetOrder();
-            NavigationManager.NavigateTo("/");
+            NavigationManager.NavigateTo("/myorders");
         }
     }
 }
