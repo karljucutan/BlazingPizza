@@ -12,26 +12,18 @@ namespace BlazingPizza.Pages
 
         private async Task PlaceOrder() // private access modifier by default if not explicitly indicated.
         {
+            isError = false;
             isSubmitting = true;
-            var response = await HttpClient.PostAsJsonAsync($"{NavigationManager.BaseUri}orders", OrderState.Order);
+            var response = await HttpClient.PostAsJsonAsync(
+                $"{NavigationManager.BaseUri}orders", OrderState.Order);
             var newOrderId = await response.Content.ReadFromJsonAsync<int>();
             OrderState.ResetOrder();
-            isSubmitting = false;
             NavigationManager.NavigateTo($"myorders/{newOrderId}");
         }
 
-        //private async Task CheckSubmission(EditContext editContext)
-        //{
-        //    isSubmitting = true;
-        //    var model = editContext.Model as Address;
-        //    isError = string.IsNullOrWhiteSpace(model?.Name)
-        //        || string.IsNullOrWhiteSpace(model?.Line1)
-        //        || string.IsNullOrWhiteSpace(model?.PostalCode);
-        //    if (!isError)
-        //    {
-        //        await PlaceOrder();
-        //    }
-        //    isSubmitting = false;
-        //}
+        protected void ShowError()
+        {
+            isError = true;
+        }
     }
 }

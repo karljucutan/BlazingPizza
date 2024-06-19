@@ -8,7 +8,7 @@
 
 <div class="main">
     <div class="main">
-        <EditForm Model=Order.DeliveryAddress OnValidSubmit=PlaceOrder>
+        <EditForm Model=Order.DeliveryAddress OnValidSubmit=PlaceOrder OnInvalidSubmit=ShowError>
             <div class="checkout-cols">
                 <div class="checkout-order-details">
                     <h4>Review order</h4>
