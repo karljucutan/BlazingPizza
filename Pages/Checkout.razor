@@ -8,7 +8,7 @@
 
 <div class="main">
     <div class="main">
-        <EditForm Model=Order.DeliveryAddress OnSubmit=CheckSubmission>
+        <EditForm Model=Order.DeliveryAddress OnValidSubmit=PlaceOrder>
             <div class="checkout-cols">
                 <div class="checkout-order-details">
                     <h4>Review order</h4>
@@ -28,6 +28,9 @@
             <button class="checkout-button btn btn-warning" disabled=@isSubmitting>
                 Place order
             </button>
+
+            <ValidationSummary />
+            <DataAnnotationsValidator />
         </EditForm>
     </div>
 </div>
